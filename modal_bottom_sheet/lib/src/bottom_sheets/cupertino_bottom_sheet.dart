@@ -48,6 +48,7 @@ class _CupertinoBottomSheetContainer extends StatelessWidget {
   final Color? backgroundColor;
   final Radius topRadius;
   final BoxShadow? shadow;
+  final bool? expand;
   final SystemUiOverlayStyle? overlayStyle;
 
   const _CupertinoBottomSheetContainer({
@@ -56,6 +57,7 @@ class _CupertinoBottomSheetContainer extends StatelessWidget {
     required this.topRadius,
     this.overlayStyle,
     this.shadow,
+    this.expand,
   });
 
   @override
@@ -69,7 +71,7 @@ class _CupertinoBottomSheetContainer extends StatelessWidget {
     final backgroundColor = this.backgroundColor ??
         CupertinoTheme.of(context).scaffoldBackgroundColor;
     Widget bottomSheetContainer = Padding(
-      padding: EdgeInsets.only(top: topPadding),
+      padding: EdgeInsets.only(top: expand == true ? 0.0 : topPadding),
       child: ClipRRect(
         borderRadius: BorderRadius.vertical(top: topRadius),
         child: Container(
@@ -137,6 +139,7 @@ Future<T?> showCupertinoModalBottomSheet<T>({
               backgroundColor: backgroundColor,
               topRadius: topRadius,
               shadow: shadow,
+              expand: expand,
               overlayStyle: overlayStyle,
             ),
         secondAnimationController: secondAnimation,
@@ -467,6 +470,7 @@ class CupertinoScaffold extends StatefulWidget {
         backgroundColor: backgroundColor,
         topRadius: topRadius ?? _kDefaultTopRadius,
         shadow: shadow,
+        expand: expand,
         overlayStyle: overlayStyle,
       ),
       expanded: expand,

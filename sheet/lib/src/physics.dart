@@ -167,6 +167,17 @@ class BouncingSheetPhysics extends ScrollPhysics with SheetPhysics {
   @override
   Simulation? createBallisticSimulation(
       ScrollMetrics position, double velocity) {
+    // final Tolerance tolerance = toleranceFor(
+    //   FixedScrollMetrics(
+    //     minScrollExtent: null,
+    //     maxScrollExtent: null,
+    //     pixels: null,
+    //     viewportDimension: null,
+    //     axisDirection: AxisDirection.down,
+    //     devicePixelRatio: WidgetsBinding
+    //         .instance.platformDispatcher.views.first.devicePixelRatio,
+    //   ),
+    // );
     if (position.outOfRange) {
       return BouncingScrollSimulation(
         spring: const SpringDescription(
@@ -263,6 +274,17 @@ class NoMomentumSheetPhysics extends ScrollPhysics with SheetPhysics {
   @override
   Simulation? createBallisticSimulation(
       ScrollMetrics position, double velocity) {
+    // final Tolerance tolerance = toleranceFor(
+    //   FixedScrollMetrics(
+    //     minScrollExtent: null,
+    //     maxScrollExtent: null,
+    //     pixels: null,
+    //     viewportDimension: null,
+    //     axisDirection: AxisDirection.down,
+    //     devicePixelRatio: WidgetsBinding
+    //         .instance.platformDispatcher.views.first.devicePixelRatio,
+    //   ),
+    // );
     if (position.outOfRange) {
       double? end;
       if (position.pixels > position.maxScrollExtent) {
@@ -333,6 +355,17 @@ class ClampingSheetPhysics extends ScrollPhysics with SheetPhysics {
   Simulation? createBallisticSimulation(
       ScrollMetrics position, double velocity) {
     final Tolerance tolerance = toleranceFor(position);
+    // final Tolerance tolerance = toleranceFor(
+    //   FixedScrollMetrics(
+    //     minScrollExtent: null,
+    //     maxScrollExtent: null,
+    //     pixels: null,
+    //     viewportDimension: null,
+    //     axisDirection: AxisDirection.down,
+    //     devicePixelRatio: WidgetsBinding
+    //         .instance.platformDispatcher.views.first.devicePixelRatio,
+    //   ),
+    // );
     if (position.outOfRange) {
       double? end;
       if (position.pixels > position.maxScrollExtent) {
@@ -450,6 +483,17 @@ class SnapSheetPhysics extends ScrollPhysics with SheetPhysics {
     //     (velocity >= 0.0 && position.pixels >= position.maxScrollExtent))
     //   return super.createBallisticSimulation(position, velocity);
     final Tolerance tolerance = toleranceFor(position);
+    // final Tolerance tolerance = toleranceFor(
+    //   FixedScrollMetrics(
+    //     minScrollExtent: null,
+    //     maxScrollExtent: null,
+    //     pixels: null,
+    //     viewportDimension: null,
+    //     axisDirection: AxisDirection.down,
+    //     devicePixelRatio: WidgetsBinding
+    //         .instance.platformDispatcher.views.first.devicePixelRatio,
+    //   ),
+    // );
     final double target = _getTargetPixels(position, tolerance, velocity);
     if (target != position.pixels) {
       return ScrollSpringSimulation(
