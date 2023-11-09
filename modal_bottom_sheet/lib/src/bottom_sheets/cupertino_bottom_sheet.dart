@@ -22,8 +22,7 @@ import 'package:flutter/material.dart'
         debugCheckHasMaterialLocalizations;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-
-import '../../modal_bottom_sheet.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 const double _kPreviousPageVisibleOffset = 10;
 
@@ -63,8 +62,7 @@ class _CupertinoBottomSheetContainer extends StatelessWidget {
     this.shadow,
     this.overlayStyle,
     this.expand,
-  })  : clip = clip ?? Clip.antiAlias,
-        super(key: key);
+  }) : clip = clip ?? Clip.antiAlias;
 
   @override
   Widget build(BuildContext context) {
@@ -220,7 +218,7 @@ class CupertinoModalBottomSheetRoute<T> extends ModalSheetRoute<T> {
     this.topRadius = _kDefaultTopRadius,
     this.previousRouteAnimationCurve,
     this.overlayStyle,
-  }): clipBehavior = clipBehavior ?? Clip.antiAlias;
+  }) : clipBehavior = clipBehavior ?? Clip.antiAlias;
 
   @override
   Widget buildTransitions(
@@ -280,8 +278,7 @@ class _CupertinoModalTransition extends StatelessWidget {
     Clip? clip,
     this.backgroundColor = Colors.black,
     this.animationCurve,
-  })  : clip = clip ?? Clip.antiAlias,
-        super(key: key);
+  }) : clip = clip ?? Clip.antiAlias;
 
   @override
   Widget build(BuildContext context) {
@@ -462,8 +459,7 @@ class CupertinoScaffold extends StatefulWidget {
     this.transitionBackgroundColor = Colors.black,
     this.overlayStyle,
     Clip? clipBehavior,
-  })  : clipBehavior = clipBehavior ?? Clip.antiAlias,
-        super(key: key);
+  }) : clipBehavior = clipBehavior ?? Clip.antiAlias;
 
   @override
   State<StatefulWidget> createState() => _CupertinoScaffoldState();

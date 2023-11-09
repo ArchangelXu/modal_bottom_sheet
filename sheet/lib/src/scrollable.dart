@@ -752,10 +752,6 @@ class SheetState extends State<SheetScrollable>
 
   @override
   double? get initialExtent => widget.initialExtent;
-
-  @override
-  double get devicePixelRatio =>
-      WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
 }
 
 /// With [_ScrollSemantics] certain child [SemanticsNode]s can be

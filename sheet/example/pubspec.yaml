@@ -10,9 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   equatable: ^2.0.5
-  collection: 
   cupertino_icons: ^1.0.6
-  provider: ^6.0.5
+  provider: ^6.1.0
   sheet:
     path: ../
   go_router: ^12.1.0
