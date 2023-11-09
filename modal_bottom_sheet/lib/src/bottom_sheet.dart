@@ -7,7 +7,6 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/src/utils/bottom_sheet_suspended_curve.dart';
-import 'package:modal_bottom_sheet/src/utils/scroll_to_top_status_bar.dart';
 
 const Curve _decelerateEasing = Cubic(0.0, 0.0, 0.2, 1.0);
 
@@ -192,16 +191,17 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
 
   ParametricCurve<double> animationCurve = Curves.linear;
 
-  void _handleDragUpdate(DragUpdateDetails details) async {
+  void _handleDragUpdate(double primaryDelta) async {
     animationCurve = Curves.linear;
     assert(widget.enableDrag, 'Dragging is disabled');
 
     if (_dismissUnderway) return;
-    // Returns if the drag is horizontal
-    if (details.delta.dx.abs() > details.delta.dy.abs()) return;
+    // Returns if the drag is horizontal PR_310
+    // DragUpdateDetails details
+    // final primaryDelta = details.delta.dy;
+    // if (details.delta.dx.abs() > details.delta.dy.abs()) return;
     isDragging = true;
 
-    final primaryDelta = details.delta.dy;
     final progress = primaryDelta / (_childHeight ?? primaryDelta);
 
     if (widget.shouldClose != null && hasReachedWillPopThreshold) {
@@ -301,7 +301,7 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
       if (notification is ScrollEndNotification) {
         final dragDetails = notification.dragDetails;
         if (dragDetails != null) {
-          _handleDragEnd(dragDetails.velocity.pixelsPerSecond.dy);
+          _handleDragEnd(dragDetails.primaryVelocity ?? 0);
           _velocityTracker = null;
           _startTime = null;
           return;
@@ -329,7 +329,7 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
       if (dragDetails != null) {
         final duration = startTime.difference(DateTime.now());
         velocityTracker.addPosition(duration, Offset(0, offset));
-        _handleDragUpdate(dragDetails);
+        _handleDragUpdate(dragDetails.delta.dy);
       } else if (isDragging) {
         final velocity = velocityTracker.getVelocity().pixelsPerSecond.dy;
         _velocityTracker = null;
@@ -384,11 +384,11 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
                   builder: (context, _) => CustomSingleChildLayout(
                     delegate: _CustomBottomSheetLayout(bounceAnimation.value),
                     child: GestureDetector(
-                      onPanUpdate: (details) {
-                        _handleDragUpdate(details);
+                      onVerticalDragUpdate: (details) {
+                        _handleDragUpdate(details.delta.dy);
                       },
-                      onPanEnd: (details) {
-                        _handleDragEnd(details.velocity.pixelsPerSecond.dy);
+                      onVerticalDragEnd: (details) {
+                        _handleDragEnd(details.primaryVelocity ?? 0);
                       },
                       child: NotificationListener<ScrollNotification>(
                         onNotification: (ScrollNotification notification) {
