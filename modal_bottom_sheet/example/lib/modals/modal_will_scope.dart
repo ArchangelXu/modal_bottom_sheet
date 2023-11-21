@@ -6,10 +6,12 @@ class ModalWillScope extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool shouldClose = true;
     return Material(
-        child: WillPopScope(
-      onWillPop: () async {
-        bool shouldClose = true;
+        child: PopScope(
+      canPop: shouldClose,
+      onPopInvoked: (bool didPop) async {
+        // bool shouldClose = true;
         await showCupertinoDialog(
             context: context,
             builder: (context) => CupertinoAlertDialog(
@@ -31,7 +33,7 @@ class ModalWillScope extends StatelessWidget {
                     ),
                   ],
                 ));
-        return shouldClose;
+        // return shouldClose;
       },
       child: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(

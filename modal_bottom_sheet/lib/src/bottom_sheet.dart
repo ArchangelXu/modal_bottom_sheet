@@ -36,6 +36,7 @@ class ModalBottomSheet extends StatefulWidget {
     required this.animationController,
     this.animationCurve,
     this.enableDrag = true,
+    this.modalController,
     this.containerBuilder,
     this.bounce = true,
     this.shouldClose,
@@ -103,6 +104,8 @@ class ModalBottomSheet extends StatefulWidget {
   /// Default is true.
   final bool enableDrag;
 
+  final ModalBottomSheetController? modalController;
+
   final ScrollController scrollController;
 
   /// The minFlingVelocity parameter
@@ -141,6 +144,7 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
   ScrollController get _scrollController => widget.scrollController;
 
   late AnimationController _bounceDragController;
+  late ModalBottomSheetController _modalController;
 
   double? get _childHeight {
     final childContext = _childKey.currentContext;
@@ -193,7 +197,9 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
 
   void _handleDragUpdate(double primaryDelta) async {
     animationCurve = Curves.linear;
-    assert(widget.enableDrag, 'Dragging is disabled');
+    assert(widget.enableDrag || _modalController.enableDrag,
+        'Dragging is disabled');
+    if (!_modalController.enableDrag) return;
 
     if (_dismissUnderway) return;
     // Returns if the drag is horizontal PR_310
@@ -228,7 +234,9 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
   }
 
   void _handleDragEnd(double velocity) async {
-    assert(widget.enableDrag, 'Dragging is disabled');
+    assert(widget.enableDrag || _modalController.enableDrag,
+        'Dragging is disabled');
+    if (!_modalController.enableDrag) return;
 
     animationCurve = BottomSheetSuspendedCurve(
       widget.animationController.value,
@@ -343,12 +351,27 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
 
   @override
   void initState() {
+    // Todo: Check if we can remove scroll Controller
+    super.initState();
+    _modalController = widget.modalController ?? ModalBottomSheetController();
+    _modalController._enableDrag = widget.enableDrag;
     animationCurve = _defaultCurve;
     _bounceDragController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+  }
 
-    // Todo: Check if we can remove scroll Controller
-    super.initState();
+  @override
+  void dispose() {
+    _bounceDragController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant ModalBottomSheet oldWidget) {
+    if (oldWidget.enableDrag != widget.enableDrag) {
+      _modalController._enableDrag = widget.enableDrag;
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -384,12 +407,16 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
                   builder: (context, _) => CustomSingleChildLayout(
                     delegate: _CustomBottomSheetLayout(bounceAnimation.value),
                     child: GestureDetector(
-                      onVerticalDragUpdate: (details) {
-                        _handleDragUpdate(details.delta.dy);
-                      },
-                      onVerticalDragEnd: (details) {
-                        _handleDragEnd(details.primaryVelocity ?? 0);
-                      },
+                      onVerticalDragUpdate: !_modalController.enableDrag
+                          ? null
+                          : (details) {
+                              _handleDragUpdate(details.delta.dy);
+                            },
+                      onVerticalDragEnd: !_modalController.enableDrag
+                          ? null
+                          : (details) {
+                              _handleDragEnd(details.primaryVelocity ?? 0);
+                            },
                       child: NotificationListener<ScrollNotification>(
                         onNotification: (ScrollNotification notification) {
                           _handleScrollUpdate(notification);
@@ -424,6 +451,16 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
         );
       },
     );
+  }
+}
+
+class ModalBottomSheetController {
+  bool _enableDrag = true;
+
+  bool get enableDrag => _enableDrag;
+
+  onChangeEnableDrag(bool enable) {
+    _enableDrag = enable;
   }
 }
 

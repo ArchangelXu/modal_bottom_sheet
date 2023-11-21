@@ -15,6 +15,7 @@ class _ModalBottomSheet<T> extends StatefulWidget {
     this.bounce = false,
     this.expanded = false,
     this.enableDrag = true,
+    this.modalController,
     this.animationCurve,
   });
 
@@ -23,6 +24,7 @@ class _ModalBottomSheet<T> extends StatefulWidget {
   final bool expanded;
   final bool bounce;
   final bool enableDrag;
+  final ModalBottomSheetController? modalController;
   final AnimationController? secondAnimationController;
   final Curve? animationCurve;
 
@@ -98,7 +100,8 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
                 animationController: widget.route._animationController!,
                 shouldClose: widget.route._hasScopedWillPopCallback
                     ? () async {
-                        final willPop = await widget.route.willPop();
+                        // final willPop = await widget.route.willPop();
+                        final willPop = widget.route.popDisposition;
                         return willPop != RoutePopDisposition.doNotPop;
                       }
                     : null,
@@ -109,6 +112,7 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
                 },
                 child: child!,
                 enableDrag: widget.enableDrag,
+                modalController: widget.modalController,
                 bounce: widget.bounce,
                 scrollController: scrollController,
                 animationCurve: widget.animationCurve,
@@ -133,6 +137,7 @@ class ModalSheetRoute<T> extends PageRoute<T> {
     this.modalBarrierColor,
     this.isDismissible = true,
     this.enableDrag = true,
+    this.modalController,
     required this.expanded,
     this.bounce = false,
     this.animationCurve,
@@ -148,6 +153,7 @@ class ModalSheetRoute<T> extends PageRoute<T> {
   final Color? modalBarrierColor;
   final bool isDismissible;
   final bool enableDrag;
+  final ModalBottomSheetController? modalController;
   final ScrollController? scrollController;
 
   final Duration duration;
@@ -186,7 +192,9 @@ class ModalSheetRoute<T> extends PageRoute<T> {
   }
 
   // ignore: deprecated_member_use
-  bool get _hasScopedWillPopCallback => hasScopedWillPopCallback;
+  bool get _hasScopedWillPopCallback =>
+      popDisposition !=
+      RoutePopDisposition.doNotPop; // hasScopedWillPopCallback;
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
@@ -203,6 +211,7 @@ class ModalSheetRoute<T> extends PageRoute<T> {
         expanded: expanded,
         bounce: bounce,
         enableDrag: enableDrag,
+        modalController: modalController,
         animationCurve: animationCurve,
       ),
     );
@@ -243,6 +252,7 @@ Future<T?> showCustomModalBottomSheet<T>({
   bool useRootNavigator = false,
   bool isDismissible = true,
   bool enableDrag = true,
+  ModalBottomSheetController? modalController,
   Duration? duration,
   RouteSettings? settings,
   double? closeProgressThreshold,
@@ -267,6 +277,7 @@ Future<T?> showCustomModalBottomSheet<T>({
     isDismissible: isDismissible,
     modalBarrierColor: barrierColor,
     enableDrag: enableDrag,
+    modalController: modalController,
     animationCurve: animationCurve,
     duration: duration,
     settings: settings,
