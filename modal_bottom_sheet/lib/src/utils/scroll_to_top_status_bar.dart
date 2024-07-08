@@ -10,7 +10,6 @@ class StatusBarGestureDetector extends StatefulWidget {
   const StatusBarGestureDetector({
     super.key,
     required this.child,
-    required this.scrollController,
     required this.onTap,
   });
   final Widget child;

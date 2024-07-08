@@ -51,7 +51,6 @@ class _CupertinoBottomSheetContainer extends StatelessWidget {
   final BoxShadow? shadow;
   final SystemUiOverlayStyle? overlayStyle;
   final bool? expand;
-  final SystemUiOverlayStyle? overlayStyle;
 
   const _CupertinoBottomSheetContainer({
     required this.child,
@@ -155,7 +154,7 @@ Future<T?> showCupertinoModalBottomSheet<T>({
         shadow: shadow,
         overlayStyle: overlayStyle,
         expand: expand,
-      overlayStyle: overlayStyle,),
+      ),
       secondAnimationController: secondAnimation,
       expanded: expand,
       closeProgressThreshold: closeProgressThreshold,

@@ -350,14 +350,10 @@ class _PageBasedCupertinoSheetRoute<T> extends CupertinoSheetRoute<T> {
     super.maintainState,
   }) : super(
           settings: page,
-    builder: (BuildContext context) {
-      return (ModalRoute.of(context)!.settings as CupertinoSheetPage<T>)
-          .child;
-    },
-          initialStop: initialStop,
-          backgroundColor: backgroundColor,
-          stops: stops,
-          maintainState: maintainState,
+          builder: (BuildContext context) {
+            return (ModalRoute.of(context)!.settings as CupertinoSheetPage<T>)
+                .child;
+          },
         );
 
   CupertinoSheetPage<T> get _page => settings as CupertinoSheetPage<T>;
